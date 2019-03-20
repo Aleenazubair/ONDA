@@ -1,0 +1,36 @@
+Imports System.Runtime.InteropServices
+
+Public Class Form1
+
+    Dim recording As Boolean = False
+    Dim Filez As String = "C:\\Test.wav"
+
+    <DllImport("winmm.dll")> _
+    Private Shared Function mciSendString(ByVal command As String, ByVal buffer As String, ByVal bufferSize As Integer, ByVal hwndCallback As IntPtr) As Integer
+    End Function
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+
+        If recording = False Then
+            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0)
+            mciSendString("record recsound", "", 0, 0)
+            recording = True
+            Button1.Text = "Stop"
+        Else
+            mciSendString("save recsound " & Filez, "", 0, 0)
+            mciSendString("close recsound ", "", 0, 0)
+            Button2.Enabled = True
+            recording = False
+            Button1.Text = "Record"
+        End If
+
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        My.Computer.Audio.Play(Filez)
+    End Sub
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Button2.Enabled = False
+    End Sub
+End Class
